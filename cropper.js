@@ -6,11 +6,14 @@
   document.body.appendChild(canvas);
 
   var img = document.querySelector(".canvas-cropper");
+  var rect = img.getBoundingClientRect();
   var imageProp = {
-    left: img.offsetLeft,
-    top: img.offsetTop,
-    width: img.offsetWidth,
-    height: img.offsetHeight
+    left: rect.left,
+    top: rect.top,
+    width: rect.right - rect.left,
+    height: rect.bottom - rect.top,
+    scrollLeft: document.documentElement.scrollLeft,
+    scrollTop: document.documentElement.scrollTop
   }
 
   img.addEventListener("mouseenter", function () {
@@ -36,15 +39,15 @@
       canvasContext.fillRect(0,0,imageProp.width, imageProp.height);
 
       img.style.visibility = "hidden";
-      startX = (event.clientX - imageProp.left);
-      startY = (event.clientY - imageProp.top);
+      startX = (event.pageX - imageProp.left - imageProp.scrollLeft);
+      startY = (event.pageY - imageProp.top - imageProp.scrollTop);
     }
   }, false);
 
   canvas.addEventListener("mousemove", function (event) {
     if (mousedown && !done) {
-      cropImageWidth = event.clientX - imageProp.left - startX;
-      cropImageHeight = event.clientY - imageProp.top - startY;
+      cropImageWidth = event.pageX  - startX - imageProp.left - imageProp.scrollLeft;
+      cropImageHeight = event.pageY - startY - imageProp.top - imageProp.scrollTop;
       canvasContext.drawImage(img, 0, 0);
       canvasContext.fillStyle = "rgba(0, 0, 0, 0.8)";
       canvasContext.fillRect(0, 0, startX, imageProp.height);
