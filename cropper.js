@@ -6,6 +6,8 @@
 
   var canvas = document.createElement("canvas"),
     canvasContext = canvas.getContext("2d");
+  // canvas 未设置宽高时，自身宽高默认为300*150，在页面中会占位，故用户未操作时，隐藏canvas
+  canvas.style.display = 'none';
   document.body.appendChild(canvas);
 
   var img = document.querySelector(".canvas-cropper");
