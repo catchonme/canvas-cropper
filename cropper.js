@@ -14,7 +14,7 @@
   canvas.style.display = 'none';
   document.body.appendChild(canvas);
 
-  var img = document.querySelector(".canvas-cropper");
+  var img = document.querySelector(".cropper-image");
   var rect = img.getBoundingClientRect();
   var imageProp = {
     left: rect.left,
