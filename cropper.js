@@ -1,11 +1,11 @@
 (function (window, document) {
   var startX = 0, startY = 0, startPageX = 0, startPageY = 0,
-      endX = 0, endY = 0,  endPageX = 0, endPageY = 0,
-      cropImageWidth = 0, cropImageHeight = 0,done = false, mousedown = false;
+    endX = 0, endY = 0,  endPageX = 0, endPageY = 0,
+    cropImageWidth = 0, cropImageHeight = 0,done = false, mousedown = false;
 
 
   var canvas = document.createElement("canvas"),
-      canvasContext = canvas.getContext("2d");
+    canvasContext = canvas.getContext("2d");
   document.body.appendChild(canvas);
 
   var img = document.querySelector(".canvas-cropper");
@@ -31,21 +31,24 @@
     if (event.target.tagName === "IMG" && !done) {
       mousedown = true;
 
+      // 设置canvas的样式，
       canvas.width = imageProp.width;
       canvas.height = imageProp.height;
       canvas.style.position = "absolute";
       canvas.style.display = "block";
       canvas.style.top = imageProp.top + imageProp.scrollTop + 'px';
       canvas.style.left = imageProp.left + imageProp.scrollLeft + 'px';
+      // 将初始图片写入canvas，并绘制阴影，原始图片设置隐藏
       canvasContext.drawImage(img, 0, 0);
       canvasContext.fillStyle = "rgba(0,0,0,0.4)";
       canvasContext.fillRect(0,0,imageProp.width, imageProp.height);
-
       img.style.visibility = "hidden";
+
+      // 获取鼠标的位置，和在canvas中的坐标
       startPageX = event.pageX;
       startPageY = event.pageY;
-      startX = (event.pageX - imageProp.left - imageProp.scrollLeft);
-      startY = (event.pageY - imageProp.top - imageProp.scrollTop);
+      startX = (startPageX - imageProp.left - imageProp.scrollLeft);
+      startY = (startPageY - imageProp.top - imageProp.scrollTop);
     }
   }, false);
 
