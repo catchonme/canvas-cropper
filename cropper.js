@@ -1,8 +1,8 @@
 (function (window, document) {
   var startX = 0, startY = 0, startPageX = 0, startPageY = 0,
     endX = 0, endY = 0,  endPageX = 0, endPageY = 0,
-    cropImageWidth = 0, cropImageHeight = 0,done = false, mousedown = false;
-
+    cropImageWidth = 0, cropImageHeight = 0,
+    done = false, mousedown = false;
 
   var canvas = document.createElement("canvas"),
     canvasContext = canvas.getContext("2d");
@@ -39,7 +39,7 @@
       canvas.style.top = imageProp.top + imageProp.scrollTop + 'px';
       canvas.style.left = imageProp.left + imageProp.scrollLeft + 'px';
       // 将初始图片写入canvas，并绘制阴影，原始图片设置隐藏
-      canvasContext.drawImage(img, 0, 0);
+      canvasContext.drawImage(img, 0, 0, imageProp.width, imageProp.height);
       canvasContext.fillStyle = "rgba(0,0,0,0.4)";
       canvasContext.fillRect(0,0,imageProp.width, imageProp.height);
       img.style.visibility = "hidden";
@@ -69,28 +69,49 @@
       startX = Math.min(startX, endX);
       startY = Math.min(startY, endY);
 
+      canvasContext.drawImage(img, 0, 0, canvas.width, canvas.height);
       // 截图时周围的阴影
-      canvasContext.drawImage(img, 0, 0);
       canvasContext.fillStyle = "rgba(0, 0, 0, 0.8)";
       canvasContext.fillRect(0, 0, startX, imageProp.height);
       canvasContext.fillRect(startX + cropImageWidth, 0, imageProp.width - cropImageWidth, imageProp.height );
       canvasContext.fillRect(startX, 0, cropImageWidth, startY);
       canvasContext.fillRect(startX, startY + cropImageHeight, cropImageWidth, imageProp.height - cropImageHeight);
+
     }
   }, false);
 
   canvas.addEventListener("mouseup", function () {
     mousedown = false;
     done = true;
-    canvas.width = cropImageWidth;
-    canvas.height = cropImageHeight;
-    canvasContext.drawImage(img, startX, startY, cropImageWidth, cropImageHeight, 0, 0, cropImageWidth, cropImageHeight);
+
+    var sourceImage = new Image();
+    sourceImage.src = img.src;
+
+    var sourceImageWidth = sourceImage.width;
+    var sourceImageHeight = sourceImage.height;
+    // 计算图片原始大小与设置后的图片大小的比例
+    var widthRatio = sourceImageWidth / imageProp.width;
+    var heightRatio = sourceImageHeight / imageProp.height;
+
+    var sourceStartX = startX * widthRatio;
+    var sourceStartY = startY * heightRatio;
+
+    var actualCropWidth = cropImageWidth * widthRatio;
+    var actualCropHeight = cropImageHeight * heightRatio;
+
+    var tempCanvas = document.createElement("canvas");
+    var tempCanvasContext = tempCanvas.getContext("2d");
+    tempCanvas.width = actualCropWidth;
+    tempCanvas.height = actualCropHeight;
+
+    tempCanvasContext.drawImage(sourceImage, sourceStartX, sourceStartY, actualCropWidth, actualCropHeight, 0, 0, actualCropWidth, actualCropHeight);
+
+    var tempCropData = tempCanvas.toDataURL("image/png");
+    img.src = tempCropData;
+
     img.style.visibility = 'visible';
     img.style.cursor = 'default';
-    // 把canvas截取的图片替换初始的图片
-    var cropData = canvas.toDataURL("image/png");
-    img.src = cropData;
-    canvasContext.clearRect(0,0,canvas.width, canvas.height);
+
     document.body.removeChild(canvas);
   }, false)
 
