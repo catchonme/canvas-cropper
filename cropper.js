@@ -1,7 +1,11 @@
 (function (window, document) {
+    // 鼠标开始点击时在canvas中的坐标位置，和在页面中的位置
   var startX = 0, startY = 0, startPageX = 0, startPageY = 0,
+    // 鼠标结束时在canvas中的坐标位置，和在页面中的位置
     endX = 0, endY = 0,  endPageX = 0, endPageY = 0,
+    // 裁剪图片的宽度/高度
     cropImageWidth = 0, cropImageHeight = 0,
+    // 裁剪是否完成，鼠标是否按下
     done = false, mousedown = false;
 
   var canvas = document.createElement("canvas"),
@@ -22,6 +26,7 @@
   }
 
   img.addEventListener("mouseenter", function () {
+    // 设置鼠标进入图片时的样式
     if (!done) {
       img.style.cursor = 'Crosshair';
     } else {
@@ -70,7 +75,7 @@
       // starX 取最小值是因为鼠标最终的坐标比鼠标起始的坐标小时，截图时的阴影需要获取到截图的鼠标最小值的位置
       startX = Math.min(startX, endX);
       startY = Math.min(startY, endY);
-
+      // 将图片绘制到canvas中
       canvasContext.drawImage(img, 0, 0, canvas.width, canvas.height);
       // 截图时周围的阴影
       canvasContext.fillStyle = "rgba(0, 0, 0, 0.8)";
@@ -91,7 +96,11 @@
 
     var sourceImageWidth = sourceImage.width;
     var sourceImageHeight = sourceImage.height;
-    // 计算图片原始大小与设置后的图片大小的比例
+    /*
+    * 计算图片原始大小与设置后的图片大小的比例
+    * <img src="image-src" width="400" height="200"/>
+    * 如果没有设置图片的width/height，则比例为1
+    */
     var widthRatio = sourceImageWidth / imageProp.width;
     var heightRatio = sourceImageHeight / imageProp.height;
 
