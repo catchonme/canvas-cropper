@@ -37,7 +37,7 @@
   img.addEventListener("mousedown", function (event) {
     if (event.target.tagName === "IMG" && !done) {
       mousedown = true;
-
+      canvas.style.cursor = 'Crosshair';
       // 设置canvas的样式，
       canvas.width = imageProp.width;
       canvas.height = imageProp.height;
@@ -63,7 +63,7 @@
     if (mousedown && !done) {
       endPageX = event.pageX;
       endPageY = event.pageY;
-
+      canvas.style.cursor = 'Crosshair';
       // 裁剪图像的宽高
       cropImageWidth = Math.abs(endPageX - startPageX);
       cropImageHeight = Math.abs(endPageY - startPageY);
@@ -90,7 +90,7 @@
   canvas.addEventListener("mouseup", function () {
     mousedown = false;
     done = true;
-
+    canvas.style.cursor = 'default';
     var sourceImage = new Image();
     sourceImage.src = img.src;
 
