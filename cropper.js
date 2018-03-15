@@ -126,4 +126,4 @@
     document.body.removeChild(canvas);
   }, false)
 
-}(window, document))
+})(window, document)
