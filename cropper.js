@@ -1,5 +1,5 @@
-(function (window, document) {
-    // 鼠标开始点击时在canvas中的坐标位置，和在页面中的位置
+var cropper = (function (window, document) {
+  // 鼠标开始点击时在canvas中的坐标位置，和在页面中的位置
   var startX = 0, startY = 0, startPageX = 0, startPageY = 0,
     // 鼠标结束时在canvas中的坐标位置，和在页面中的位置
     endX = 0, endY = 0,  endPageX = 0, endPageY = 0,
@@ -14,7 +14,7 @@
   canvas.style.display = 'none';
   document.body.appendChild(canvas);
 
-  var img = document.querySelector(".cropper-image");
+  var img = document.querySelector("#cropper-image");
   var rect = img.getBoundingClientRect();
   var imageProp = {
     left: rect.left,
@@ -35,8 +35,7 @@
   }, false);
 
   img.addEventListener("mousedown", function (event) {
-    if (event.target.tagName === "IMG" && !done) {
-      mousedown = true;
+    if (event.target.id === "cropper-image") {
       canvas.style.cursor = 'Crosshair';
       // 设置canvas的样式，
       canvas.width = imageProp.width;
@@ -51,16 +50,29 @@
       canvasContext.fillRect(0,0,imageProp.width, imageProp.height);
       img.style.visibility = "hidden";
 
-      // 获取鼠标的位置，和在canvas中的坐标
-      startPageX = event.pageX;
-      startPageY = event.pageY;
-      startX = (startPageX - imageProp.left - imageProp.scrollLeft);
-      startY = (startPageY - imageProp.top - imageProp.scrollTop);
+      getPosition(event);
     }
   }, false);
 
+  // 鼠标初次mousedown，是在img上按下mousedown，第二次则是在canvas上，因为此时img已隐藏
+  canvas.addEventListener("mousedown", function (event) {
+    getPosition(event);
+  })
+
+  // 分离出公共的函数
+  function getPosition(event) {
+    mousedown = true;
+    // 获取鼠标的位置，和在canvas中的坐标
+    startPageX = event.pageX;
+    startPageY = event.pageY;
+    startX = (startPageX - imageProp.left - imageProp.scrollLeft);
+    startY = (startPageY - imageProp.top - imageProp.scrollTop);
+  }
+
+  // 鼠标mousemove选择裁剪的范围
   canvas.addEventListener("mousemove", function (event) {
-    if (mousedown && !done) {
+    // 通过mousedown参数来防止鼠标mouseup后，鼠标mousemove，还会继续选择区域的问题
+    if (mousedown) {
       endPageX = event.pageX;
       endPageY = event.pageY;
       canvas.style.cursor = 'Crosshair';
@@ -89,7 +101,9 @@
 
   canvas.addEventListener("mouseup", function () {
     mousedown = false;
-    done = true;
+  }, false)
+
+  function end() {
     canvas.style.cursor = 'default';
     var sourceImage = new Image();
     sourceImage.src = img.src;
@@ -117,13 +131,20 @@
 
     tempCanvasContext.drawImage(sourceImage, sourceStartX, sourceStartY, actualCropWidth, actualCropHeight, 0, 0, actualCropWidth, actualCropHeight);
 
-    var tempCropData = tempCanvas.toDataURL("image/png");
-    img.src = tempCropData;
-
+    var cropData = tempCanvas.toDataURL("image/png");
     img.style.visibility = 'visible';
     img.style.cursor = 'default';
+    canvas.style.display = "none"
 
-    document.body.removeChild(canvas);
-  }, false)
+    // 没有在图片上选择区域时，cropData的数据为data:,
+    if (cropData == 'data:,') {
+      return '';
+    }
+    return cropData;
+  }
+
+  return {
+    end:end
+  }
 
 })(window, document)

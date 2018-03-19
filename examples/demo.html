@@ -13,13 +13,42 @@
             width:300px;
             margin:0 auto;
         }
-
+        button {
+            display: block;
+            width:60px;
+            height:35px;
+            text-align: center;
+            line-height: 35px;
+            color:#fff;
+            background:#0e62cd;
+        }
     </style>
 </head>
 <body>
 <section>
-    <img src="alone.jpg" class="cropper-image">
+    <img src="alone.jpg" id="cropper-image">
+    <button class="btn" onclick="getImage()">裁剪</button>
 </section>
 </body>
 <script src="../cropper.js"></script>
+<script>
+    function getImage() {
+      var imageSrc = cropper.end();
+
+      // 没有选择裁剪区域时，返回数据为空
+      if (!imageSrc) {
+        return;
+      }
+      // 替换掉原有图片
+      var cropperImage = document.getElementById("cropper-image");
+      cropperImage.src = imageSrc;
+
+      /*
+      // 生成新的image元素，插入到页面元素中
+      var newImage = new Image();
+      newImage.src = imageSrc;
+      document.body.appendChild(newImage);
+      */
+    }
+</script>
 </html>

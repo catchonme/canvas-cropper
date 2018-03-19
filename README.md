@@ -2,9 +2,9 @@
 
 ## 使用方法
 - 引入`cropper.js`文件
-- 在`img` 标签内加上`cropper-image`的类
+- 在`img` 标签内加上`cropper-image`的ID
 ```html
-<img src="imageSrc" class="cropper-image"/>
+<img src="imageSrc" id="cropper-image"/>
 <script src="cropper.js"></script>
 ```
 
