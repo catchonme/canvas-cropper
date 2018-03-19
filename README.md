@@ -6,6 +6,10 @@
 ```html
 <img src="imageSrc" id="cropper-image"/>
 <script src="cropper.js"></script>
+<script>
+// 得到裁剪后的图片
+var imageSrc = cropper.end();
+</script>
 ```
 
 ## 截图
