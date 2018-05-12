@@ -28,7 +28,7 @@ var cropper = (function (window, document) {
   img.addEventListener("mouseenter", function () {
     // 设置鼠标进入图片时的样式
     if (!done) {
-      img.style.cursor = 'Crosshair';
+      img.style.cursor = 'crosshair';
     } else {
       img.style.cursor = 'default';
     }
@@ -36,7 +36,7 @@ var cropper = (function (window, document) {
 
   img.addEventListener("mousedown", function (event) {
     if (event.target.id === "cropper-image") {
-      canvas.style.cursor = 'Crosshair';
+      canvas.style.cursor = 'crosshair';
       // 设置canvas的样式，
       canvas.width = imageProp.width;
       canvas.height = imageProp.height;
@@ -75,7 +75,7 @@ var cropper = (function (window, document) {
     if (mousedown) {
       endPageX = event.pageX;
       endPageY = event.pageY;
-      canvas.style.cursor = 'Crosshair';
+      canvas.style.cursor = 'crosshair';
       // 裁剪图像的宽高
       cropImageWidth = Math.abs(endPageX - startPageX);
       cropImageHeight = Math.abs(endPageY - startPageY);
@@ -136,7 +136,7 @@ var cropper = (function (window, document) {
     img.style.cursor = 'default';
     canvas.style.display = "none"
 
-    // 没有在图片上选择区域时，cropData的数据为data:,
+    // 没有在图片上选择区域时，cropData的数据为'data:,'
     if (cropData == 'data:,') {
       return '';
     }
